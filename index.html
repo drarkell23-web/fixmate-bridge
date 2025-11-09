@@ -2,140 +2,179 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>FixMate – Your Personal Maintenance Agent</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>FixMate — Smart Maintenance Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
 <style>
-  body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #3a0ca3, #7209b7, #4361ee);
-    color: white;
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .container {
-    background: rgba(255,255,255,0.1);
-    padding: 30px;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 450px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  }
-  h1 {
-    text-align: center;
-    color: #fff;
-    margin-bottom: 10px;
-  }
-  h3 {
-    text-align: center;
-    font-weight: 400;
-    color: #eee;
-    margin-bottom: 20px;
-  }
-  label {
-    font-weight: 600;
-    display: block;
-    margin-top: 10px;
-  }
-  input, select, textarea {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border-radius: 8px;
-    border: none;
-    font-size: 15px;
-  }
-  button {
-    background: #4cc9f0;
-    border: none;
-    color: #000;
-    font-weight: 700;
-    width: 100%;
-    padding: 12px;
-    margin-top: 15px;
-    border-radius: 10px;
-    cursor: pointer;
-  }
-  button:hover {
-    background: #4895ef;
-  }
-  .success {
-    display: none;
-    text-align: center;
-    font-weight: 700;
-    color: #b8f2e6;
-    margin-top: 10px;
-  }
+:root{
+  --bg1:#0b0a18; --bg2:#141229; --ink:#f6f7fb; --muted:#c6c9de;
+  --brand:#8a5cff; --brand2:#6a4cff; --chip:#29244b;
+  --shadow:0 14px 32px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto;color:var(--ink);
+  background:linear-gradient(160deg,var(--bg1),var(--bg2));overflow-x:hidden;
+}
+h1{margin:0;font-size:clamp(22px,3.5vw,36px);}
+button,input,textarea{font-family:inherit;}
+input,textarea{
+  width:100%;padding:10px;border:none;border-radius:8px;background:var(--chip);color:#fff;
+}
+textarea{resize:none;height:80px;}
+.hero{width:min(1200px,94vw);margin:30px auto;padding:10px;position:relative;text-align:center;}
+.badge{width:60px;height:60px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--brand),var(--brand2));font-weight:900;color:#0a061b;box-shadow:0 10px 26px #8a5cff55;margin:auto;}
+.sub{color:var(--muted);margin-top:4px;font-size:15px;}
+.contractor-btn{position:absolute;top:10px;right:20px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#0a061b;border:none;font-weight:800;padding:10px 16px;border-radius:10px;cursor:pointer;box-shadow:var(--shadow);}
+.contractor-btn:hover{opacity:0.9;}
+.btn{background:linear-gradient(135deg,var(--brand),var(--brand2));border:none;color:#0e0727;font-weight:800;padding:10px 14px;border-radius:10px;cursor:pointer;}
+.btn:hover{opacity:.9;}
+.service-section{width:min(1200px,94vw);margin:auto;text-align:center;margin-top:40px;}
+.service-title{font-size:24px;font-weight:700;margin-bottom:20px;}
+.services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:15px;}
+.service-bubble{background:#231f41;color:#fff;padding:14px 12px;border-radius:50px;cursor:pointer;font-weight:600;box-shadow:0 3px 6px rgba(0,0,0,.3);transition:.3s;}
+.service-bubble:hover{background:linear-gradient(135deg,var(--brand),var(--brand2));transform:scale(1.07);}
+.testimonials{width:min(1100px,94vw);margin:70px auto 30px;text-align:center;overflow:hidden;position:relative;}
+.testimonials h2{font-size:24px;margin-bottom:20px;}
+.testimonial-card{opacity:0;position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;transition:opacity 1s ease;}
+.testimonial-card.active{opacity:1;position:relative;}
+.testimonial-text{background:#231f41;padding:20px;border-radius:16px;box-shadow:0 4px 18px rgba(0,0,0,.4);max-width:700px;font-size:15px;line-height:1.6;}
+.stars{color:#FFD700;margin:8px 0;}
+.testimonial-author{font-weight:700;margin-top:8px;color:#e0e0e0;}
+.live-feed{width:min(900px,94vw);margin:10px auto 60px;text-align:center;font-size:15px;color:#bfc3e0;position:relative;min-height:30px;}
+.live-feed span{display:inline-block;opacity:0;transform:translateY(20px);transition:opacity 0.7s ease, transform 0.7s ease;}
+.live-feed span.active{opacity:1;transform:translateY(0);}
+.c-backdrop{position:fixed;inset:0;background:#0008;display:none;place-items:center;z-index:45;}
+.c-modal{background:#16132d;border:1px solid #ffffff1a;border-radius:18px;padding:18px;width:min(700px,94vw);max-height:80vh;overflow:auto;}
+.c-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:640px){.c-row{grid-template-columns:1fr;}}
+.c-actions{display:flex;gap:10px;margin-top:12px;}
+.ok{color:#b8f2e6;font-weight:700;margin-top:8px;display:none;}
+.chat-popup{position:fixed;bottom:100px;right:20px;background:#18152f;border:1px solid #ffffff1a;border-radius:14px;padding:15px;width:320px;max-height:400px;display:none;flex-direction:column;justify-content:space-between;z-index:50;box-shadow:var(--shadow);}
+.chat-header{font-weight:700;margin-bottom:10px;}
+.chat-log{flex:1;overflow-y:auto;font-size:14px;margin-bottom:10px;}
+.chat-msg{background:var(--chip);padding:8px 10px;border-radius:10px;margin-bottom:6px;width:fit-content;max-width:80%;}
+.bot{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#0e0727;}
+.user{align-self:flex-end;background:#2e2b48;}
+canvas#confetti{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:100;}
+.footer{text-align:center;margin:40px 0;color:var(--muted);font-size:14px;}
 </style>
 </head>
 <body>
-  <div class="container">
-    <h1>FixMate</h1>
-    <h3>Your Personal Maintenance Agent</h3>
+<canvas id="confetti"></canvas>
+<section class="hero">
+  <button class="contractor-btn" id="openContractor">🧰 Join as Contractor</button>
+  <div class="badge">FM</div>
+  <h1>FixMate — Smart Maintenance Assistant</h1>
+  <p class="sub">The Best & Most Affordable Maintenance Network in South Africa 🇿🇦</p>
+</section>
 
-    <form id="leadForm">
-      <label>Full Name</label>
-      <input type="text" id="name" required />
+<section class="service-section">
+  <div class="service-title">Choose the service that you need today!</div>
+  <div class="services-grid" id="servicesGrid"></div>
+</section>
 
-      <label>Phone Number</label>
-      <input type="text" id="phone" required />
-
-      <label>Service Type</label>
-      <select id="service">
-        <option>Plumbing</option>
-        <option>Electrical</option>
-        <option>Leak Detection</option>
-        <option>Roofing</option>
-        <option>Building</option>
-        <option>Painting</option>
-        <option>Renovations</option>
-        <option>Other</option>
-      </select>
-
-      <label>Describe the issue</label>
-      <textarea id="details" rows="3" required></textarea>
-
-      <button type="submit">Send Lead</button>
-      <div class="success" id="successMsg">✅ Lead sent successfully!</div>
-    </form>
+<section class="testimonials">
+  <h2>What Our Clients Say 💬</h2>
+  <div class="testimonial-card active">
+    <div class="testimonial-text">"Plumber arrived in under 30 minutes — friendly, neat and super professional. I’ll never call anyone else!"</div>
+    <div class="stars">★★★★★</div>
+    <div class="testimonial-author">— Nomsa M., Durban</div>
   </div>
+  <div class="testimonial-card">
+    <div class="testimonial-text">"The electrician explained everything clearly and fixed my geyser the same day. Real lifesavers!"</div>
+    <div class="stars">★★★★★</div>
+    <div class="testimonial-author">— Thabo K., Johannesburg</div>
+  </div>
+</section>
+
+<section class="live-feed">
+  <span id="liveMessage" class="active">💬 Katie from Cape Town just booked a plumber!</span>
+</section>
+
+<div class="c-backdrop" id="cBackdrop">
+  <div class="c-modal">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <h3>🚨 New Contractor Sign-Up</h3>
+      <button class="btn" id="cClose" style="padding:6px 10px;font-size:12px;">Close</button>
+    </div>
+    <p style="color:#ccc;margin:8px 0;">Join the FixMate contractor network — we connect you to local clients daily!</p>
+    <div class="c-row">
+      <input id="bizName" placeholder="Business / Contractor Name">
+      <input id="ownerName" placeholder="Contact Person">
+    </div>
+    <div class="c-row">
+      <input id="bizEmail" placeholder="Email">
+      <input id="bizPhone" placeholder="Phone Number">
+    </div>
+    <div class="c-row">
+      <input id="trade" placeholder="Trade (e.g., Plumbing, Electrical)">
+      <input id="areas" placeholder="Service Areas (e.g., Durban, JHB)">
+    </div>
+    <div class="c-actions">
+      <button class="btn" id="conSubmit">Submit</button>
+    </div>
+    <div class="ok" id="conOk">✅ Submitted successfully!</div>
+  </div>
+</div>
+
+<div class="chat-popup" id="chatPopup">
+  <div class="chat-header">💜 FixMate Assistant</div>
+  <div class="chat-log" id="chatLog"></div>
+  <input id="chatInput" placeholder="Type your answer..." autocomplete="off">
+</div>
+
+<div class="footer">© 2025 FixMate | The Best & Most Affordable Maintenance Network</div>
 
 <script>
-const TOKEN = "8590267654:AAG24Oo6GlAUjVxZ1JXjNLNq_LZ5gIK4BDs"; 
-const CHAT_ID = "8187670531";
+const TELEGRAM_BOT_TOKEN = "8590267654:AAG24Oo6GlAUjVxZ1JXjNLNq_LZ5gIK4BDs";
+const TELEGRAM_CHAT_IDS = ["8187670531", "8558139331"]; // you + client
 
-document.getElementById("leadForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const name = document.getElementById("name").value;
-  const phone = document.getElementById("phone").value;
-  const service = document.getElementById("service").value;
-  const details = document.getElementById("details").value;
-
-  const message = `
-🛠️ *New FixMate Lead!*
-👤 Name: ${name}
-📞 Phone: ${phone}
-🔧 Service: ${service}
-📝 Details: ${details}
-📅 Sent: ${new Date().toLocaleString()}
-`;
-
-  try {
-    await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: CHAT_ID, text: message, parse_mode: "Markdown" })
-    });
-    document.getElementById("successMsg").style.display = "block";
-    document.getElementById("leadForm").reset();
-  } catch (error) {
-    alert("Error sending lead. Please try again.");
+async function sendTelegram(msg){
+  const urlBase=`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+  for(const id of TELEGRAM_CHAT_IDS){
+    const data={chat_id:id,text:msg,parse_mode:"Markdown"};
+    await fetch(urlBase,{method:"POST",headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
   }
-});
+}
+
+/* Confetti */
+const canvas=document.getElementById('confetti'),ctx=canvas.getContext('2d');
+function resize(){canvas.width=innerWidth;canvas.height=innerHeight;}
+resize();window.addEventListener('resize',resize);
+function confettiBurst(){
+ const colors=['#8a5cff','#6a4cff','#23d5ab','#7ee6d5'];
+ const parts=Array.from({length:100},()=>({x:innerWidth/2,y:innerHeight,r:3+Math.random()*5,dx:-6+Math.random()*12,dy:-12-Math.random()*6,color:colors[Math.floor(Math.random()*colors.length)],life:120}));
+ let frame=0;(function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);
+ for(const p of parts){ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,2*Math.PI);ctx.fillStyle=p.color;ctx.fill();p.x+=p.dx;p.y+=p.dy;p.dy+=0.2;p.life--;}
+ frame++;if(frame<120){requestAnimationFrame(draw);}else{ctx.clearRect(0,0,canvas.width,canvas.height);}})();
+}
+
+/* Contractor */
+const cB=document.getElementById('cBackdrop');
+document.getElementById('openContractor').onclick=()=>cB.style.display='grid';
+document.getElementById('cClose').onclick=()=>cB.style.display='none';
+document.getElementById('conSubmit').onclick=async()=>{
+ const b=bizName.value,o=ownerName.value,e=bizEmail.value,p=bizPhone.value,t=trade.value,a=areas.value;
+ const msg=`🚨 *NEW CONTRACTOR ALERT*\n🏢 ${b}\n👤 ${o}\n📞 ${p}\n📧 ${e}\n🛠️ ${t}\n🗺️ ${a}\n🕒 ${new Date().toLocaleString()}`;
+ await sendTelegram(msg);
+ document.getElementById('conOk').style.display='block';
+ confettiBurst();
+ setTimeout(()=>cB.style.display='none',2500);
+};
+
+/* Services */
+const services=["Plumbing","Electrical","HVAC","Handyman","Cleaning","Landscaping","Painting","Carpentry","Roofing","Flooring","Masonry","Welding","Renovations","Pest Control","Security Systems","Fire Alarm","Waste Disposal","Water Supply","Swimming Pool","IT Equipment","Machinery","Automotive","Appliance Repair","Locksmith","Window Cleaning","Gutter Cleaning","Kitchen Equipment","Construction Maintenance","Paving","Solar Installation","CCTV Installation","Air Conditioning","Fencing","Waterproofing","Panel Beating"];
+const grid=document.getElementById('servicesGrid');
+services.forEach(s=>{const div=document.createElement('div');div.className='service-bubble';div.textContent=s;div.onclick=()=>startChatbot(s);grid.appendChild(div);});
+
+/* Chatbot */
+const chatPopup=document.getElementById('chatPopup'),chatLog=document.getElementById('chatLog'),chatInput=document.getElementById('chatInput');
+let chatStep=0,userData={},currentService="";
+function addMsg(text,cls="bot"){const d=document.createElement('div');d.className='chat-msg '+cls;d.textContent=text;chatLog.appendChild(d);chatLog.scrollTop=chatLog.scrollHeight;}
+function botSay(t){addMsg(t,'bot');}
+function startChatbot(service){currentService=service;chatPopup.style.display='flex';chatLog.innerHTML='';chatStep=0;userData={};botSay(`Hi 👋 I'm FixMate! Let's get your *${service}* job sorted.`);setTimeout(()=>botSay("What's your name?"),1000);}
+chatInput.addEventListener('keydown',async e=>{if(e.key!=="Enter")return;const val=chatInput.value.trim();if(!val)return;addMsg(val,'user');chatInput.value='';switch(chatStep){case 0:userData.name=val;botSay(`Nice to meet you, ${val}! 📞 What's your phone number?`);chatStep++;break;case 1:userData.phone=val;botSay("Got it. 📍 What area are you in?");chatStep++;break;case 2:userData.area=val;botSay("Perfect. 📝 Please describe your issue in a few words.");chatStep++;break;case 3:userData.notes=val;const msg=`🧰 *NEW MAINTENANCE LEAD*\nService: ${currentService}\n👤 Name: ${userData.name}\n📞 Phone: ${userData.phone}\n📍 Area: ${userData.area}\n📝 Notes: ${userData.notes}\n🕒 ${new Date().toLocaleString()}`;await sendTelegram(msg);botSay("✅ Thanks! Your request has been sent to FixMate. We'll contact you shortly.");confettiBurst();setTimeout(()=>chatPopup.style.display='none',3500);break;}});
 </script>
 </body>
 </html>
