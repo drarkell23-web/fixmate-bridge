@@ -1,49 +1,55 @@
 from flask import Flask, request, jsonify
 import requests
+from datetime import datetime
 import os
 
 app = Flask(__name__)
 
-# ===========================
-# 🔒 KEEP THESE SECRET!
-# ===========================
-BOT_TOKEN = "8590267654:AAG24Oo6GlAUjVxZ1JXjNLNq_LZ5gIK4BDs"
-CHAT_IDS = ["8187670531"]  # Add more if you want to receive on multiple chats
+# Telegram Bot Config
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "8590267654:AAG24Oo6GlAUjVxZ1JXjNLNq_LZ5gIK4BDs")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "8187670531")
+
 
 @app.route("/")
-def home():
+def index():
     return jsonify({"ok": True, "message": "FixMate Telegram Bridge is running."})
+
 
 @app.route("/send_lead", methods=["POST"])
 def send_lead():
-    data = request.get_json(force=True)
+    """Receives lead data and sends it to Telegram."""
+    data = request.get_json()
     if not data:
-        return jsonify({"ok": False, "error": "No data received"}), 400
+        return jsonify({"ok": False, "error": "No JSON data received"}), 400
 
-    msg = f"""🛠️ *New FixMate Lead*
-👤 *Name:* {data.get('fullName','-')}
-📞 *Phone:* {data.get('phone','-')}
-📧 *Email:* {data.get('email','-')}
-🧰 *Service:* {data.get('serviceCategory','-')}
-📝 *Issues:* {data.get('specificIssues','-')}
-🏠 *Property:* {data.get('propertyType','-')}
-📍 *Address:* {data.get('address','-')}, {data.get('city','')}
-📅 *Preferred:* {data.get('preferredDate','-')} {data.get('preferredTime','-')}
-💵 *Budget:* {data.get('budgetRange','-')}
-☎️ *Contact:* {data.get('contactMethod','-')}
-🧾 *Notes:* {data.get('extraNotes','-')}"""
+    name = data.get("fullName", "Unknown")
+    phone = data.get("phone", "N/A")
+    service = data.get("service", "N/A")
+    message = data.get("message", "N/A")
 
-    for cid in CHAT_IDS:
-        try:
-            requests.post(
-                f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
-                json={"chat_id": cid, "text": msg, "parse_mode": "Markdown"},
-                timeout=10
-            )
-        except Exception as e:
-            print(f"⚠️ Telegram send failed for {cid}: {e}")
+    text = (
+        f"🧰 *New Maintenance Lead Received!*\n\n"
+        f"👤 Name: {name}\n"
+        f"📞 Phone: {phone}\n"
+        f"🛠 Service: {service}\n"
+        f"📝 Message: {message}\n"
+        f"🕒 Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+    )
 
-    return jsonify({"ok": True, "message": "Lead sent to Telegram."})
+    try:
+        response = requests.post(
+            f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage",
+            json={"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "Markdown"},
+            timeout=10
+        )
+        if response.status_code == 200:
+            return jsonify({"ok": True, "message": "Lead sent to Telegram!"})
+        else:
+            return jsonify({"ok": False, "error": "Telegram API error"}), 500
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    port = int(os.getenv("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
